@@ -86,7 +86,7 @@ const decorateUsers = async (users) => {
     }));
   } catch (err) {
     if (err.cause) throw err;
-    err.message = `Failed to decorateUsers [message:${err.message}]`
+    err.message = `Failed to decorateUsers [message:${err.message}]`;
     throw err;
   }
 };

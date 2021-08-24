@@ -17,7 +17,7 @@ describe("goodExampleRouteHandler", () => {
   test("should work as intended", async () => {
     addMock("api.com/users", { data: [{ id: 123 }] });
     addMock("api.com/profiles/123", { data: { name: "Tom" } });
-    addMock("api.com/orders?user=123", { data: { id: 456 } });
+    addMock("api.com/orders?user=123", { data: [{ id: 456 }] });
 
     app.use("/", goodExampleRouteHandler).use(errorHandler);
     const response = await supertest(app).get("/");
@@ -26,9 +26,11 @@ describe("goodExampleRouteHandler", () => {
       users: [
         {
           id: 123,
-          orders: {
-            id: 456,
-          },
+          orders: [
+            {
+              id: 456,
+            },
+          ],
           profile: {
             name: "Tom",
           },
@@ -45,14 +47,18 @@ describe("goodExampleRouteHandler", () => {
     app.use("/", goodExampleRouteHandler).use(errorHandler);
     const response = await supertest(app).get("/");
 
-    expect(response.text).toMatchInlineSnapshot(`
-"Error: Failed to fetchUserOrders() @ api.com/orders?user=123 [message:connect ECONNREFUSED 127.0.0.1:80] [user:123]
-    at fetchUserOrders (C:\\\\Users\\\\Fede\\\\Documents\\\\write-better-express-handlers\\\\example-good.js:57:15)
-    at processTicksAndRejections (internal/process/task_queues.js:95:5)
-    at async Promise.all (index 0)
-    at async Promise.all (index 1)
-    at decorateUsers (C:\\\\Users\\\\Fede\\\\Documents\\\\write-better-express-handlers\\\\example-good.js:77:32)
-    at goodExampleRouteHandler (C:\\\\Users\\\\Fede\\\\Documents\\\\write-better-express-handlers\\\\example-good.js:7:28)"
-`);
+    expect(response.text.split("\n")).toEqual([
+      "Error: Failed to fetchUserOrders() @ api.com/orders?user=123 [message:connect ECONNREFUSED 127.0.0.1:80] [user:123]",
+      expect.stringMatching(/at fetchUserOrders.*.\\example-good.js:\d\d:\d\d/),
+      expect.stringContaining(
+        "at processTicksAndRejections (internal/process/task_queues.js:"
+      ),
+      expect.stringContaining("at async Promise.all (index 0)"),
+      expect.stringContaining("at async Promise.all (index 1)"),
+      expect.stringMatching(/at decorateUsers.*.\\example-good.js:\d+:\d+/),
+      expect.stringMatching(
+        /at goodExampleRouteHandler.*.\\example-good.js:\d+:\d+/
+      ),
+    ]);
   });
 });

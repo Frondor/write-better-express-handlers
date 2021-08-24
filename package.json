@@ -20,5 +20,8 @@
     "nodemon": "2.0.12",
     "prettier": "2.3.2",
     "supertest": "6.1.6"
+  },
+  "engines": {
+    "node": "^14"
   }
 }

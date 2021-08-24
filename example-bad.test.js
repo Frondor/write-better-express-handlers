@@ -17,7 +17,7 @@ describe("badExampleRouteHandler", () => {
   test("should work as intended", async () => {
     addMock("api.com/users", { data: [{ id: 123 }] });
     addMock("api.com/profiles/123", { data: { name: "Tom" } });
-    addMock("api.com/orders?user=123", { data: { id: 456 } });
+    addMock("api.com/orders?user=123", { data: [{ id: 456 }] });
 
     app.use("/", badExampleRouteHandler).use(errorHandler);
     const response = await supertest(app).get("/");
@@ -26,9 +26,11 @@ describe("badExampleRouteHandler", () => {
       users: [
         {
           id: 123,
-          orders: {
-            id: 456,
-          },
+          orders: [
+            {
+              id: 456,
+            },
+          ],
           profile: {
             name: "Tom",
           },
@@ -45,9 +47,11 @@ describe("badExampleRouteHandler", () => {
     app.use("/", badExampleRouteHandler).use(errorHandler);
     const response = await supertest(app).get("/");
 
-    expect(response.text).toMatchInlineSnapshot(`
-"Error: connect ECONNREFUSED 127.0.0.1:80
-    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1148:16)"
-`);
+    expect(response.text.split("\n")).toEqual([
+      "Error: connect ECONNREFUSED 127.0.0.1:80",
+      expect.stringContaining(
+        "at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1148:16)"
+      ),
+    ]);
   });
 });

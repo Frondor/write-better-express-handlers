@@ -8,11 +8,13 @@ You can read more at [How to (not) handle async errors in Node; based on a true 
 
 1. Clone the repo
 2. Run `npm install && npm start`
-4. Open the given URL in your browser and point to the `/bad` and `/good` routes
+3. Open the given URL in your browser and point to the `/bad` and `/good` routes
 
 ## Check the tests
 
-Both examples has a test case to reproduce each case
+Both examples has a test case to reproduce each case.
+
+Run the with `npm test`
 
 - [Bad example](example-bad.js) ([test](example-bad.test.js))
 - [Good example](example-good.js) ([test](example-good.test.js))
