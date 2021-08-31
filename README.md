@@ -2,7 +2,7 @@
 
 This repository hosts a demonstration of the good and bad practices we spoke about handling errors inside express' middleware functions.
 
-You can read more at [How to (not) handle async errors in Node; based on a true story](#).
+You can read more at [How to (not) write async code in Express handlers; based on a true story](https://dev.to/frondor/how-to-not-write-async-code-in-express-handlers-based-on-a-true-story-44j2).
 
 ## Try it locally
 
